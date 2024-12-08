@@ -29,21 +29,20 @@ char	**parse_command(char *command)
 
 char **tokenize(const char *command, int *token_count) {
     const char *ptr = command;
-    char **tokens = NULL;
     char *current_token = NULL;
+    size_t token_length = 0;
     int in_single_quote = 0, in_double_quote = 0;
-
-    *token_count = 0;
+    TokenNode *head = NULL;
 
     while (*ptr) {
         if (isspace(*ptr) && !in_single_quote && !in_double_quote) {
             // Finalize the current token if outside quotes
             if (current_token) {
-                tokens = realloc(tokens, (*token_count + 1) * sizeof(char *));
-                tokens[*token_count] = strdup(current_token);
-                (*token_count)++;
+                current_token[token_length] = '\0';
+                head = add_token(head, current_token);
                 free(current_token);
                 current_token = NULL;
+                token_length = 0;
             }
         } else if (*ptr == '\'' && !in_double_quote) {
             // Toggle single quotes
@@ -53,21 +52,24 @@ char **tokenize(const char *command, int *token_count) {
             in_double_quote = !in_double_quote;
         } else {
             // Append the character to the current token
-            size_t current_length = current_token ? strlen(current_token) : 0;
-            current_token = realloc(current_token, current_length + 2);  // +2 for the new char and null terminator
-            current_token[current_length] = *ptr;
-            current_token[current_length + 1] = '\0';
+            current_token = realloc(current_token, token_length + 2);  // +2 for new char and null terminator
+            current_token[token_length++] = *ptr;
+            current_token[token_length] = '\0';
         }
         ptr++;
     }
 
     // Finalize the last token
     if (current_token) {
-        tokens = realloc(tokens, (*token_count + 1) * sizeof(char *));
-        tokens[*token_count] = strdup(current_token);
-        (*token_count)++;
+        head = add_token(head, current_token);
         free(current_token);
     }
 
-    return tokens;
+    // Convert the linked list to an array
+    char **result = convert_to_array(head, token_count);
+
+    // Free the linked list
+    free_token_list(head);
+
+    return result;
 }
