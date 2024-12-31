@@ -5,71 +5,53 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/07 17:31:26 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/08 11:53:31 by cwon             ###   ########.fr       */
+/*   Created: 2024/12/11 10:16:24 by cwon              #+#    #+#             */
+/*   Updated: 2024/12/29 14:04:04 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static void	execute_process(char *command)
+static void	exec_cmd1(t_pipex *param)
 {
-	int		status;
-	char	**argv;
-	char	*pathname;
-
-	status = 0;
-	argv = parse_command(command);
-	if (!argv)
-		exit(EXIT_FAILURE);
-	pathname = get_pathname(argv);
-	status = execve(pathname, argv, environ);
-	flush_str_array(argv);
-	free(pathname);
-	if (status == -1)
-	{
-		ft_putstr_fd("command not found\n", 2);
-		exit(127);
-	}
+	if (access(param->input_file, R_OK) == -1 && errno == EACCES)
+		perror_exit(param, "no read permission on input file", 1);
+	protected_dup2(param, param->input_fd, STDIN_FILENO);
+	protected_dup2(param, param->pipefd[1], STDOUT_FILENO);
+	protected_close(&(param->pipefd[0]));
+	protected_execve(param, param->path1, param->cmd1);
 }
 
-static void	parent_process(char *argv[], int pipefd[2])
+static void	exec_cmd2(t_pipex *param)
 {
-	int	fd;
-
-	fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-		exit(EXIT_FAILURE);
-	dup2(fd, STDOUT_FILENO);
-	dup2(pipefd[0], STDIN_FILENO);
-	close(pipefd[1]);
-	execute_process(argv[3]);
+	if (access(param->output_file, W_OK) == -1 && errno == EACCES)
+		perror_exit(param, "no write permission on output file", 1);
+	protected_dup2(param, param->pipefd[0], STDIN_FILENO);
+	protected_dup2(param, param->output_fd, STDOUT_FILENO);
+	protected_close(&(param->pipefd[1]));
+	protected_execve(param, param->path2, param->cmd2);
 }
 
-static void	child_process(char *argv[], int pipefd[2])
+void	pipex(int argc, char **argv)
 {
-	int	fd;
+	t_pipex	param;
 
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-		exit(EXIT_FAILURE);
-	dup2(fd, STDIN_FILENO);
-	dup2(pipefd[1], STDOUT_FILENO);
-	close(pipefd[0]);
-	execute_process(argv[2]);
+	init_pipex(&param, argc, argv);
+	param.pid1 = protected_fork(&param);
+	if (!param.pid1)
+		exec_cmd1(&param);
+	param.pid2 = protected_fork(&param);
+	if (!param.pid2)
+		exec_cmd2(&param);
+	flush_pipex(&param);
+	param.pid1 = waitpid(param.pid1, &param.status1, 0);
+	param.pid2 = waitpid(param.pid2, &param.status2, 0);
+	if (WEXITSTATUS(param.status2))
+		exit(WEXITSTATUS(param.status2));
 }
 
-void	pipex(int argc, char *argv[])
+int	main(int argc, char **argv)
 {
-	int		pipefd[2];
-	pid_t	pid;
-
-	if (argc != 5 || pipe(pipefd) == -1)
-		exit(EXIT_FAILURE);
-	pid = fork();
-	if (pid == -1)
-		exit(EXIT_FAILURE);
-	if (!pid)
-		child_process(argv, pipefd);
-	parent_process(argv, pipefd);
+	pipex(argc, argv);
+	return (0);
 }

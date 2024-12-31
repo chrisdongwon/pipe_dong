@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstiter.c                                       :+:      :+:    :+:   */
+/*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/06 11:37:56 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/08 22:48:51 by cwon             ###   ########.fr       */
+/*   Created: 2024/12/12 08:53:12 by cwon              #+#    #+#             */
+/*   Updated: 2024/12/30 21:49:53 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
-void	ft_lstiter(t_list *lst, void (*f)(void *))
+char	**tokenize(t_pipex *param, char *cmd)
 {
-	if (lst && lst->content)
+	char	**result;
+
+	result = protected_split(param, cmd, ' ');
+	if (!result[0])
 	{
-		(*f)(lst->content);
-		ft_lstiter(lst->next, f);
+		flush_str_array(result);
+		return (whitespace_command(param, cmd));
 	}
+	return (result);
 }

@@ -6,7 +6,7 @@
 #    By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/05 14:08:28 by cwon              #+#    #+#              #
-#    Updated: 2024/12/05 14:10:11 by cwon             ###   ########.fr        #
+#    Updated: 2024/12/08 23:28:20 by cwon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ header = pipex.h
 
 all: $(lib_path) $(NAME)
 
-$(lib_path): $(lib_dir)
+$(lib_path):
 	make -C $(lib_dir)
 
 %.o: %.c $(header)

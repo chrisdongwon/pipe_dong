@@ -1,19 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   init_util.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/07 17:57:05 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/07 23:59:34 by cwon             ###   ########.fr       */
+/*   Created: 2024/12/11 22:46:53 by cwon              #+#    #+#             */
+/*   Updated: 2024/12/30 18:40:39 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	main(int argc, char *argv[])
+char	*potential_path(t_pipex *param, char *dir, char *cmd)
 {
-	pipex(argc, argv);
-	return (0);
+	char	*result;
+	char	*temp;
+
+	temp = protected_strjoin(param, dir, "/");
+	result = ft_strjoin(temp, cmd);
+	free(temp);
+	if (!result)
+		error_exit(param, "strjoin() failed", EXIT_FAILURE);
+	return (result);
 }

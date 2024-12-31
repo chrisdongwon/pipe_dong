@@ -1,22 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstiter.c                                       :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/06 11:37:56 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/08 22:48:51 by cwon             ###   ########.fr       */
+/*   Created: 2024/12/12 09:07:31 by cwon              #+#    #+#             */
+/*   Updated: 2024/12/28 14:58:06 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
-void	ft_lstiter(t_list *lst, void (*f)(void *))
+void	error_exit(t_pipex *param, char *message, int exit_code)
 {
-	if (lst && lst->content)
+	if (message)
 	{
-		(*f)(lst->content);
-		ft_lstiter(lst->next, f);
+		ft_putstr_fd(message, 2);
+		ft_putstr_fd("\n", 2);
 	}
+	flush_pipex(param);
+	exit(exit_code);
+}
+
+void	perror_exit(t_pipex *param, char *message, int exit_code)
+{
+	perror(message);
+	flush_pipex(param);
+	exit(exit_code);
 }
