@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 10:16:22 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/30 18:52:12 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/01 19:15:12 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_pipex
 {
 	char	**envp;
 	int		pipefd[2];
+
 	char	*input_file;
 	char	*output_file;
 	int		input_fd;
@@ -42,6 +43,16 @@ typedef struct s_pipex
 	int		status2;
 }	t_pipex;
 
+typedef struct s_tokenizer
+{
+	char	*str;
+	size_t	len;
+	size_t	i;
+	size_t	j;
+	int		single_quote;
+	int		double_quote;
+}	t_tokenizer;
+
 // pipex.c
 void	pipex(int argc, char **argv);
 
@@ -51,8 +62,13 @@ void	init_pipex(t_pipex *param, int argc, char **argv);
 // init_util.c
 char	*potential_path(t_pipex *param, char *dir, char *cmd);
 
-// command.c
+// tokenizer.c
 char	**tokenize(t_pipex *param, char *cmd);
+
+// tokenizer_util.c
+void	init_tokenizer(t_list **node, t_tokenizer *data, char *input);
+void	append_token(t_list **head, char *token);
+char	**list_to_array(t_list *node);
 
 // protect_process.c
 void	protected_pipe(t_pipex *param);
@@ -71,7 +87,7 @@ char	*protected_strdup(t_pipex *param, char *str);
 char	*protected_substr(t_pipex *param, char *str, size_t start, size_t len);
 
 // flush.c
-void	flush_str_array(char **arr);
+void	*flush_str_array(char **arr);
 void	flush_pipex(t_pipex *param);
 
 // error.c

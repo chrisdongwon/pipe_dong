@@ -6,13 +6,13 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 23:08:54 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/28 15:26:34 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/01 14:03:03 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	flush_str_array(char **arr)
+void	*flush_str_array(char **arr)
 {
 	size_t	i;
 
@@ -23,6 +23,7 @@ void	flush_str_array(char **arr)
 			free(arr[i++]);
 		free(arr);
 	}
+	return (0);
 }
 
 static void	flush_fd(t_pipex *param)
