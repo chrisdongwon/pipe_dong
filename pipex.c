@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 10:16:24 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/29 14:04:04 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/09 14:01:04 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	pipex(int argc, char **argv)
 	t_pipex	param;
 
 	init_pipex(&param, argc, argv);
+	protected_pipe(&param);
 	param.pid1 = protected_fork(&param);
 	if (!param.pid1)
 		exec_cmd1(&param);

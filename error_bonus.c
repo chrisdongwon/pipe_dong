@@ -1,26 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_util.c                                        :+:      :+:    :+:   */
+/*   error_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/11 22:46:53 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/30 18:40:39 by cwon             ###   ########.fr       */
+/*   Created: 2025/01/09 12:23:52 by cwon              #+#    #+#             */
+/*   Updated: 2025/01/09 12:57:11 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
-char	*potential_path(t_pipex *param, char *dir, char *cmd)
+void	error_exit(t_pipex *param, char *message, int exit_code)
 {
-	char	*result;
-	char	*temp;
+	if (message)
+	{
+		ft_putstr_fd(message, 2);
+		ft_putstr_fd("\n", 2);
+	}
+	flush_pipex(param);
+	exit(exit_code);
+}
 
-	temp = protected_strjoin(param, dir, "/");
-	result = ft_strjoin(temp, cmd);
-	free(temp);
-	if (!result)
-		error_exit(param, "strjoin() failed", EXIT_FAILURE);
-	return (result);
+void	perror_exit(t_pipex *param, char *message, int exit_code)
+{
+	perror(message);
+	flush_pipex(param);
+	exit(exit_code);
 }

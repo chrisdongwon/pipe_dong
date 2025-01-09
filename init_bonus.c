@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   init_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/12 10:00:49 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/09 14:00:51 by cwon             ###   ########.fr       */
+/*   Created: 2025/01/09 12:19:56 by cwon              #+#    #+#             */
+/*   Updated: 2025/01/09 13:34:10 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 static char	*potential_path(t_pipex *param, char *dir, char *cmd)
 {
@@ -72,15 +72,24 @@ static void	init_fd(t_pipex *param, char **argv)
 
 void	init_pipex(t_pipex *param, int argc, char **argv)
 {
-	if (argc != 5)
+	ssize_t	i;
+
+	if (argc < 5)
 	{
 		ft_putstr_fd("Error: Invalid number of arguments\n", 2);
 		exit(1);
 	}
-	param->cmd1 = tokenize(param, argv[2]);
-	param->cmd2 = tokenize(param, argv[3]);
+	param->arg_count = argc - 2;
+	param->arg_array = (t_arg *)malloc((argc - 2) * sizeof(t_arg));
+	if (!param->arg_array)
+		error_exit(param, "init_pipex failed", 1);
+	i = -1;
+	while (++i < param->arg_count)
+		param->arg_array[i].cmd = tokenize(param, argv[i + 1]);
 	init_envp(param);
-	param->path1 = init_path(param, param->cmd1[0]);
-	param->path2 = init_path(param, param->cmd2[0]);
+	i = -1;
+	while (++i < param->arg_count)
+		param->arg_array[i].path = init_path(param, param->arg_array[i].cmd[0]);
 	init_fd(param, argv);
+	protected_pipe(param);
 }
