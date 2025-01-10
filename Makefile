@@ -6,7 +6,7 @@
 #    By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/05 14:08:28 by cwon              #+#    #+#              #
-#    Updated: 2025/01/09 12:48:56 by cwon             ###   ########.fr        #
+#    Updated: 2025/01/09 17:22:26 by cwon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,30 +25,14 @@ src = \
 	protect_string.c
 obj = $(src:.c=.o)
 
-bonus_src = \
-	pipex_bonus.c \
-	init_bonus.c \
-	tokenizer.c \
-	tokenizer_util.c \
-	flush_bonus.c \
-	error_bonus.c \
-	protect_file_bonus.c \
-	protect_process_bonus.c \
-	protect_string_bonus.c
-bonus_obj = $(bonus_src:.c=.o)
-
 lib_dir = libft
 lib_name = libft.a
 lib_path = $(lib_dir)/$(lib_name)
 
 NAME = pipex
 header = pipex.h
-bonus_header = pipex_bonus.h
 
 all: $(lib_path) $(NAME)
-
-bonus: $(bonus_src) $(bonus_obj) $(bonus_header) $(lib_path)
-	$(CC) $(CFLAGS) $(bonus_obj) -o $(NAME) $(lib_path)
 
 $(lib_path):
 	make -C $(lib_dir)
