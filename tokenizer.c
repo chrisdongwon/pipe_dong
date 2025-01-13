@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 23:04:27 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/13 10:46:34 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/13 14:40:13 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,15 @@ static void	init_tokenizer(t_tokenizer *result)
 static void	flush_tokenizer(t_tokenizer *data)
 {
 	if (data->buffer)
+	{
 		free(data->buffer);
+		data->buffer = 0;
+	}
 	if (data->list)
+	{
 		ft_lstclear(&(data->list), free);
+		data->list = 0;
+	}
 }
 
 static void	parse(t_tokenizer *data, char *ptr)
@@ -85,7 +91,7 @@ char	**tokenize(char *cmd)
 	if (!data.buffer)
 		return (0);
 	parse(&data, cmd);
-	if (!data.buffer || !data.list)
+	if (!data.buffer || !data.list || data.single_quote || data.double_quote)
 	{
 		flush_tokenizer(&data);
 		return (0);

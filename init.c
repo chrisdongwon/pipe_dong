@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 10:00:49 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/13 10:17:06 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/13 15:09:33 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*potential_path(t_pipex *param, char *dir, char *cmd)
 	result = ft_strjoin(temp, cmd);
 	free(temp);
 	if (!result)
-		error_exit(param, "strjoin() failed", EXIT_FAILURE);
+		error_exit(param, "strjoin", EXIT_FAILURE);
 	return (result);
 }
 
@@ -31,8 +31,8 @@ static void	init_envp(t_pipex *param)
 
 	i = 0;
 	if (!environ[i])
-		param->envp = protected_split(param, "/bin:/sbin:/usr/bin:/usr/sbin", \
-		':');
+		param->envp = \
+		protected_split(param, "/bin:/sbin:/usr/bin:/usr/sbin", ':');
 	else
 	{
 		while (environ[i] && ft_strncmp(environ[i], "PATH=", 5))
@@ -74,13 +74,21 @@ void	init_pipex(t_pipex *param, int argc, char **argv)
 {
 	if (argc != 5)
 	{
-		ft_putstr_fd("Error: Invalid number of arguments\n", 2);
+		ft_putstr_fd("Usage:\t./pipex file1 cmd1 cmd2 file2\n", 2);
 		exit(1);
 	}
 	param->cmd1 = tokenize(argv[2]);
+	if (!param->cmd1)
+	{
+		ft_putstr_fd("tokenize\n", 2);
+		exit(1);
+	}
 	param->cmd2 = tokenize(argv[3]);
-	if (!param->cmd1 || !param->cmd2)
-		error_exit(param, "tokenize", 1);
+	if (!param->cmd2)
+	{
+		ft_putstr_fd("tokenize\n", 2);
+		exit(1);
+	}
 	init_envp(param);
 	param->path1 = init_path(param, param->cmd1[0]);
 	param->path2 = init_path(param, param->cmd2[0]);
