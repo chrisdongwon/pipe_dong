@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 10:00:49 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/09 14:00:51 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/13 10:17:06 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,10 @@ void	init_pipex(t_pipex *param, int argc, char **argv)
 		ft_putstr_fd("Error: Invalid number of arguments\n", 2);
 		exit(1);
 	}
-	param->cmd1 = tokenize(param, argv[2]);
-	param->cmd2 = tokenize(param, argv[3]);
+	param->cmd1 = tokenize(argv[2]);
+	param->cmd2 = tokenize(argv[3]);
+	if (!param->cmd1 || !param->cmd2)
+		error_exit(param, "tokenize", 1);
 	init_envp(param);
 	param->path1 = init_path(param, param->cmd1[0]);
 	param->path2 = init_path(param, param->cmd2[0]);

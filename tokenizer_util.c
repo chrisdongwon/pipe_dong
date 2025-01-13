@@ -5,81 +5,54 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/01 17:06:53 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/01 19:21:57 by cwon             ###   ########.fr       */
+/*   Created: 2025/01/13 00:48:30 by cwon              #+#    #+#             */
+/*   Updated: 2025/01/13 10:02:51 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "tokenizer.h"
 
-void	init_tokenizer(t_list **node, t_tokenizer *data, char *input)
+static void	resize_buffer(t_tokenizer *data)
 {
-	*node = 0;
-	data->str = input;
-	data->len = ft_strlen(input);
-	data->i = 0;
-	data->j = 0;
-	data->single_quote = 0;
-	data->double_quote = 0;
+	if (data->i + 1 >= data->buffer_size)
+	{
+		data->buffer = \
+		ft_realloc(data->buffer, data->buffer_size, data->buffer_size * 2);
+		if (!data->buffer)
+			return ;
+		data->buffer_size *= 2;
+	}
 }
 
-void	append_token(t_list **head, char *token)
+char	process_char(char **ptr, int single_quote)
 {
-	t_list	*node;
-	char	*data;
+	char	result;
 
-	data = ft_strdup(token);
-	if (!data)
+	result = **ptr;
+	if (result == '\\' && !single_quote)
 	{
-		ft_lstclear(head, free);
-		*head = 0;
-		return ;
+		(*ptr)++;
+		if (**ptr)
+			result = **ptr;
 	}
-	node = ft_lstnew(data);
-	if (!node)
-	{
-		ft_lstclear(head, free);
-		*head = 0;
-		return ;
-	}
-	ft_lstadd_back(head, node);
-}
-
-char	**list_to_array(t_list *node)
-{
-	char	**result;
-	size_t	i;
-
-	result = (char **)malloc((ft_lstsize(node) + 1) * sizeof(char *));
-	if (!result)
-		return (0);
-	i = 0;
-	while (node)
-	{
-		result[i] = ft_strdup(node->content);
-		if (!result[i])
-		{
-			flush_str_array(result);
-			return (0);
-		}
-		node = node->next;
-		i++;
-	}
-	result[i] = 0;
 	return (result);
 }
 
-int	whitespace_command(char *str)
+void	add_to_buffer(t_tokenizer *data, char c)
 {
-	size_t	i;
-	size_t	len;
+	resize_buffer(data);
+	if (!data->buffer)
+		return ;
+	(data->buffer)[data->i] = c;
+	(data->i)++;
+}
 
-	i = 0;
-	len = ft_strlen(str);
-	while (i < len)
+void	finalize_token(t_tokenizer *data)
+{
+	if (data->i)
 	{
-		if (!ft_isspace(str[i++]))
-			return (0);
+		(data->buffer)[data->i] = 0;
+		append_token(&(data->list), data->buffer);
+		data->i = 0;
 	}
-	return (1);
 }

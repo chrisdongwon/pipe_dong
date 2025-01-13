@@ -6,31 +6,33 @@
 #    By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/05 14:08:28 by cwon              #+#    #+#              #
-#    Updated: 2025/01/09 17:22:26 by cwon             ###   ########.fr        #
+#    Updated: 2025/01/13 10:30:41 by cwon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
+tokenizer_src = \
+	tokenizer.c \
+	tokenizer_util.c \
+	list_util.c
 src = \
 	pipex.c \
 	init.c \
-	tokenizer.c \
-	tokenizer_util.c \
 	flush.c \
 	error.c \
 	protect_file.c \
 	protect_process.c \
 	protect_string.c
-obj = $(src:.c=.o)
+obj = $(src:.c=.o) $(tokenizer_src:.c=.o)
 
 lib_dir = libft
 lib_name = libft.a
 lib_path = $(lib_dir)/$(lib_name)
 
 NAME = pipex
-header = pipex.h
+header = pipex.h tokenizer.h
 
 all: $(lib_path) $(NAME)
 
@@ -45,7 +47,7 @@ $(NAME): $(src) $(obj) $(header) $(lib_path)
 
 clean:
 	make clean -C $(lib_dir)
-	rm -f $(obj) $(bonus_obj)
+	rm -f $(obj)
 
 fclean: clean
 	make fclean -C $(lib_dir)

@@ -1,31 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   flush.c                                            :+:      :+:    :+:   */
+/*   ft_isnumeric.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/11 23:08:54 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/13 10:19:20 by cwon             ###   ########.fr       */
+/*   Created: 2025/01/13 09:53:51 by cwon              #+#    #+#             */
+/*   Updated: 2025/01/13 09:54:12 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "libft.h"
 
-static void	flush_fd(t_pipex *param)
+int	ft_isnumeric(const char *str)
 {
-	protected_close(&(param->pipefd[0]));
-	protected_close(&(param->pipefd[1]));
-	protected_close(&(param->input_fd));
-	protected_close(&(param->output_fd));
-}
+	int		dot_count;
+	size_t	i;
+	size_t	str_len;
 
-void	flush_pipex(t_pipex *param)
-{
-	flush_fd(param);
-	free(param->path1);
-	free(param->path2);
-	flush_str_array(param->cmd1);
-	flush_str_array(param->cmd2);
-	flush_str_array(param->envp);
+	dot_count = 0;
+	i = 0;
+	str_len = ft_strlen(str);
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (i < str_len)
+	{
+		if (str[i] == '.')
+		{
+			dot_count++;
+			if (dot_count > 1)
+				return (0);
+		}
+		else if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
 }

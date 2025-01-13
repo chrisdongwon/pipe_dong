@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 10:16:22 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/08 15:43:57 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/13 10:20:49 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdio.h>
 # include <sys/wait.h>
 
-# include "libft/libft.h"
+# include "tokenizer.h"
 
 extern char	**environ;
 
@@ -43,30 +43,11 @@ typedef struct s_pipex
 	int		status2;
 }	t_pipex;
 
-typedef struct s_tokenizer
-{
-	char	*str;
-	size_t	len;
-	size_t	i;
-	size_t	j;
-	int		single_quote;
-	int		double_quote;
-}	t_tokenizer;
-
 // pipex.c
 void	pipex(int argc, char **argv);
 
 // init.c
 void	init_pipex(t_pipex *param, int argc, char **argv);
-
-// tokenizer.c
-char	**tokenize(t_pipex *param, char *cmd);
-
-// tokenizer_util.c
-void	init_tokenizer(t_list **node, t_tokenizer *data, char *input);
-void	append_token(t_list **head, char *token);
-char	**list_to_array(t_list *node);
-int		whitespace_command(char *str);
 
 // protect_process.c
 void	protected_pipe(t_pipex *param);
@@ -85,7 +66,6 @@ char	*protected_strdup(t_pipex *param, char *str);
 char	*protected_substr(t_pipex *param, char *str, size_t start, size_t len);
 
 // flush.c
-void	*flush_str_array(char **arr);
 void	flush_pipex(t_pipex *param);
 
 // error.c
