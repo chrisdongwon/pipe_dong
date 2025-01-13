@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 23:04:27 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/13 10:15:52 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/13 10:46:34 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,30 @@ static void	parse(t_tokenizer *data, char *ptr)
 	finalize_token(data);
 }
 
+static char	**single_command(char *cmd)
+{
+	char	**result;
+
+	result = (char **)malloc(2 * sizeof(char *));
+	if (!result)
+		return (0);
+	result[0] = ft_strdup(cmd);
+	result[1] = 0;
+	if (!result[0])
+	{
+		free(result);
+		return (0);
+	}
+	return (result);
+}
+
 char	**tokenize(char *cmd)
 {
 	char		**result;
 	t_tokenizer	data;
 
+	if (is_whitespace_command(cmd))
+		return (single_command(cmd));
 	init_tokenizer(&data);
 	if (!data.buffer)
 		return (0);
