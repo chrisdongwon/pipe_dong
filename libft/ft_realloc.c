@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/12 23:22:59 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/13 09:36:49 by cwon             ###   ########.fr       */
+/*   Created: 2025/01/14 10:22:32 by cwon              #+#    #+#             */
+/*   Updated: 2025/01/14 10:22:41 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 char	*ft_realloc(char *array, size_t current_size, size_t new_size)
 {
 	char	*result;
-
 	if (!array || !new_size)
 	{
 		if (array)

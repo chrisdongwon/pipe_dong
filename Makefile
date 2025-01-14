@@ -6,7 +6,7 @@
 #    By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/05 14:08:28 by cwon              #+#    #+#              #
-#    Updated: 2025/01/13 12:09:51 by cwon             ###   ########.fr        #
+#    Updated: 2025/01/13 15:46:39 by cwon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,9 @@ src = \
 	protect_string.c
 obj = $(src:.c=.o) $(tokenizer_src:.c=.o)
 bonus_src = \
-	pipex_bonus.c
+	main_bonus.c \
+	pipex_bonus.c \
+	init_bonus.c
 bonus_obj = $(bonus_src:.c=.o) $(tokenizer_src:.c=.o)
 
 lib_dir = libft

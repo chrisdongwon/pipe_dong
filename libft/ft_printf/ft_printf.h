@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 15:05:50 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/06 14:03:47 by cwon             ###   ########.fr       */
+/*   Updated: 2024/11/07 20:47:01 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*pad_string(size_t n, const char c);
 void	pad_zero(char **str, size_t n);
 void	put_space(char *pad, size_t len, int *count);
 
-void	flush_printf(int *count, char *str);
+void	flush(int *count, char *str);
 void	empty_str(char **str);
 
 void	format_print(t_spec spec, char *str, int *count);

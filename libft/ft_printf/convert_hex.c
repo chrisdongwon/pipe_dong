@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 23:21:21 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/06 14:03:59 by cwon             ###   ########.fr       */
+/*   Updated: 2024/11/07 20:21:00 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,6 @@ void	convert_hex(va_list *args, int *count, t_spec spec, const char *hex)
 	else if (spec.zero && !spec.dot && spec.width > len && str)
 		pad_zero(&str, spec.width - len);
 	if (!str)
-		return (flush_printf(count, str));
+		return (flush(count, str));
 	return (format_print(spec, str, count));
 }

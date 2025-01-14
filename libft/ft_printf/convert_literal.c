@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 09:17:39 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/06 14:04:33 by cwon             ###   ########.fr       */
+/*   Updated: 2024/11/07 20:16:36 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ void	convert_char(va_list *args, int *count, t_spec spec)
 		space_len = spec.width - 1;
 	space_pad = pad_string(space_len, ' ');
 	if (!space_pad)
-		return (flush_printf(count, space_pad));
+		return (flush(count, space_pad));
 	if (!spec.minus)
 		put_space(space_pad, space_len, count);
 	if (*count != -1 && ft_putchar_fd(va_arg(*args, int), 1) != -1)
 		*count += 1;
 	else
-		return (flush_printf(count, space_pad));
+		return (flush(count, space_pad));
 	if (spec.minus)
 		put_space(space_pad, space_len, count);
 	free(space_pad);
@@ -54,7 +54,7 @@ void	convert_string(va_list *args, int *count, t_spec spec)
 			str = ft_strdup("(null)");
 	}
 	if (!str)
-		return (flush_printf(count, str));
+		return (flush(count, str));
 	return (format_print(spec, str, count));
 }
 

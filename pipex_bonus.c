@@ -5,14 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 12:08:10 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/13 12:11:41 by cwon             ###   ########.fr       */
+/*   Created: 2025/01/13 15:31:58 by cwon              #+#    #+#             */
+/*   Updated: 2025/01/13 15:45:41 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-int	main(void)
+void	pipex(int argc, char **argv, char **envp)
 {
-	return (0);
+	t_pipex	param;
+
+	init_pipex(&param, argc, argv, envp);
 }

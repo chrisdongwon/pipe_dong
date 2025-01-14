@@ -6,13 +6,13 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 01:29:48 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/06 14:04:53 by cwon             ###   ########.fr       */
+/*   Updated: 2024/11/07 20:31:49 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	flush_printf(int *count, char *str)
+void	flush(int *count, char *str)
 {
 	*count = -1;
 	free(str);
@@ -36,7 +36,7 @@ void	format_print(t_spec spec, char *str, int *count)
 		space_len = spec.width - len;
 	space_pad = pad_string(space_len, ' ');
 	if (!space_pad)
-		return (flush_printf(count, str));
+		return (flush(count, str));
 	if (!spec.minus)
 		put_space(space_pad, space_len, count);
 	if (*count != -1 && ft_putstr_fd(str, 1) >= 0)
@@ -44,7 +44,7 @@ void	format_print(t_spec spec, char *str, int *count)
 	else
 	{
 		free(space_pad);
-		return (flush_printf(count, str));
+		return (flush(count, str));
 	}
 	if (spec.minus)
 		put_space(space_pad, space_len, count);

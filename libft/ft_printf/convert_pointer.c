@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:04:28 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/06 14:04:47 by cwon             ###   ########.fr       */
+/*   Updated: 2024/11/07 20:26:16 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,5 @@ void	convert_pointer(va_list *args, int *count, t_spec spec)
 		str = to_hex_string((unsigned long)ptr, "0123456789abcdef");
 	if (str)
 		return (format_print(spec, str, count));
-	return (flush_printf(count, str));
+	return (flush(count, str));
 }

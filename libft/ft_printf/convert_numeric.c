@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:45:17 by cwon              #+#    #+#             */
-/*   Updated: 2024/12/06 14:04:42 by cwon             ###   ########.fr       */
+/*   Updated: 2024/11/07 20:16:17 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	convert_int(va_list *args, int *count, t_spec spec)
 		pad_zero(&str, spec.width - len);
 	if (str && pad_sign(spec, &str))
 		return (format_print(spec, str, count));
-	return (flush_printf(count, str));
+	return (flush(count, str));
 }
 
 void	convert_unsigned(va_list *args, int *count, t_spec spec)
@@ -84,6 +84,6 @@ void	convert_unsigned(va_list *args, int *count, t_spec spec)
 	else if (str && spec.zero && !spec.dot && spec.width > len)
 		pad_zero(&str, spec.width - len);
 	if (!str)
-		return (flush_printf(count, str));
+		return (flush(count, str));
 	return (format_print(spec, str, count));
 }
