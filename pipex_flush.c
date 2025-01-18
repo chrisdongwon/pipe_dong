@@ -1,47 +1,54 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   flush_pipex.c                                      :+:      :+:    :+:   */
+/*   pipex_flush.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/17 13:22:22 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/17 15:43:06 by cwon             ###   ########.fr       */
+/*   Created: 2025/01/18 11:18:58 by cwon              #+#    #+#             */
+/*   Updated: 2025/01/18 12:41:49 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	deallocate_append(t_pipex *param, char **args)
+void	deallocate_append_str_array(t_pipex *param, char **arr)
 {
 	t_list	*node;
 	size_t	i;
 
 	i = 0;
-	while (args[i])
+	while (arr[i])
 	{
-		node = ft_lstnew(args[i++]);
+		node = ft_lstnew(arr[i++]);
 		if (!node)
 		{
-			flush_str_array(args);
-			error_exit(param, "lstnew", EXIT_FAILURE);
+			flush_str_array(arr);
+			flush_exit(param, "lstnew", EXIT_FAILURE);
 		}
 		ft_lstadd_back(&(param->deallocate), node);
 	}
-	node = ft_lstnew(args);
+	deallocate_append(param, arr);
+}
+
+void	deallocate_append(t_pipex *param, void *ptr)
+{
+	t_list	*node;
+
+	node = ft_lstnew(ptr);
 	if (!node)
 	{
-		flush_str_array(args);
-		error_exit(param, "lstnew", EXIT_FAILURE);
+		free(ptr);
+		flush_exit(param, "lstnew", EXIT_FAILURE);
 	}
 	ft_lstadd_back(&(param->deallocate), node);
 }
 
-void	error_exit(t_pipex *param, char *s, int status)
+void	flush_exit(t_pipex *param, char *error_message, int status)
 {
-	if (s)
+	if (error_message)
 	{
-		ft_putstr_fd(s, STDERR_FILENO);
+		ft_putstr_fd(error_message, STDERR_FILENO);
 		ft_putstr_fd("\n", STDERR_FILENO);
 	}
 	flush_pipex(param);
@@ -50,11 +57,8 @@ void	error_exit(t_pipex *param, char *s, int status)
 
 void	flush_pipex(t_pipex *param)
 {
-	safe_close(&(param->prev_fd));
-	safe_close(&(param->file1_fd));
-	safe_close(&(param->file2_fd));
-	safe_close(&(param->pipefd[0]));
-	safe_close(&(param->pipefd[1]));
+	close(param->file1_fd);
+	close(param->file2_fd);
 	free(param->commands);
 	ft_lstclear(&(param->deallocate), free);
 }
@@ -64,10 +68,4 @@ void	perror_exit(t_pipex *param, char *s, int status)
 	perror(s);
 	flush_pipex(param);
 	exit(status);
-}
-
-void	safe_close(int *fd)
-{
-	if (*fd != -1 && !close(*fd))
-		*fd = -1;
 }

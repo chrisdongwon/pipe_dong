@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/18 08:16:36 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/18 09:10:09 by cwon             ###   ########.fr       */
+/*   Created: 2025/01/18 10:57:37 by cwon              #+#    #+#             */
+/*   Updated: 2025/01/18 13:11:25 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,12 @@ static void	init_pipex(t_pipex *param, int argc, char **argv, char **envp)
 {
 	size_t	i;
 
-	validate_args(argc);
-	param->envp = envp;
-	param->file1_fd = open(argv[1], O_RDONLY);
-	param->file2_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	ft_memset(param->pipefd, -1, 2);
-	param->prev_fd = -1;
 	param->deallocate = 0;
+	param->environ = envp;
+	param->file1 = argv[1];
+	param->file1_fd = open(argv[1], O_RDONLY);
+	param->file2 = argv[argc - 1];
+	param->file2_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	param->cmd_count = argc - 3;
 	param->commands = (char **)malloc((param->cmd_count + 1) * sizeof(char *));
 	if (!param->commands)
@@ -49,8 +48,11 @@ void	pipex(int argc, char **argv, char **envp)
 {
 	t_pipex	param;
 
+	validate_args(argc);
 	init_pipex(&param, argc, argv, envp);
 	create_pipeline(&param);
+	while (wait(0) > 0)
+		continue ;
 	flush_pipex(&param);
 }
 

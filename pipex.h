@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 19:05:42 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/18 09:11:46 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/18 13:05:13 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,29 +23,29 @@
 typedef struct s_pipex
 {
 	char	**commands;
-	char	**envp;
+	char	**environ;
+	char	*file1;
+	char	*file2;
 	int		file1_fd;
 	int		file2_fd;
-	int		pipefd[2];
-	int		prev_fd;
 	size_t	cmd_count;
 	t_list	*deallocate;
 }	t_pipex;
 
-// flush_pipex.c
-void	deallocate_append(t_pipex *param, char **args);
-void	error_exit(t_pipex *param, char *s, int status);
-void	flush_pipex(t_pipex *param);
-void	perror_exit(t_pipex *param, char *s, int status);
-void	safe_close(int *fd);
-
-// path.c
-char	*find_command_path(char *cmd, char **envp);
-
 // pipex.c
 void	pipex(int argc, char **argv, char **envp);
 
+// pipex_path.c
+char	*find_command_path(t_pipex *param, char *cmd);
+
 // pipex_util.c
 void	create_pipeline(t_pipex *param);
+
+// pipex_flush.c
+void	deallocate_append_str_array(t_pipex *param, char **arr);
+void	deallocate_append(t_pipex *param, void *ptr);
+void	flush_exit(t_pipex *param, char *error_message, int status);
+void	flush_pipex(t_pipex *param);
+void	perror_exit(t_pipex *param, char *s, int status);
 
 #endif

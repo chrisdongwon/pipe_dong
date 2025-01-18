@@ -6,7 +6,7 @@
 #    By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/05 14:08:28 by cwon              #+#    #+#              #
-#    Updated: 2025/01/18 09:07:54 by cwon             ###   ########.fr        #
+#    Updated: 2025/01/18 12:49:15 by cwon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,8 +27,8 @@ TOKENIZER_SRC = \
 
 HEADER = pipex.h
 SRC = \
-	flush_pipex.c \
-	path.c \
+	pipex_flush.c \
+	pipex_path.c \
 	pipex_util.c \
 	pipex.c
 OBJ = $(SRC:.c=.o) $(TOKENIZER_SRC:.c=.o)
@@ -40,7 +40,7 @@ BONUS_OBJ = $(BONUS_SRC:.c=.o) $(TOKENIZER_SRC:.c=.o)
 all: $(MANDATORY_EXEC)
 	@ln -sf $(MANDATORY_EXEC) $(NAME)
 
-$(MANDATORY_EXEC): $(OBJ) $(HEADER) $(TOKENIZER_HEADER) $(LIBFT)
+$(MANDATORY_EXEC): $(LIBFT) $(OBJ) $(HEADER) $(TOKENIZER_HEADER) 
 	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(MANDATORY_EXEC)
 
 $(NAME): $(MANDATORY_EXEC)
@@ -48,14 +48,14 @@ $(NAME): $(MANDATORY_EXEC)
 bonus: $(BONUS_EXEC)
 	@ln -sf $(BONUS_EXEC) $(NAME)
 
-$(BONUS_EXEC): $(BONUS_OBJ) $(HEADER) $(TOKENIZER_HEADER) $(LIBFT)
+$(BONUS_EXEC): $(LIBFT) $(BONUS_OBJ) $(HEADER) $(TOKENIZER_HEADER)
 	$(CC) $(CFLAGS) $(BONUS_OBJ) $(LIBFT) -o $(BONUS_EXEC)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
 	make -C libft
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	make clean -C libft
