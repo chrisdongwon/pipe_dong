@@ -5,54 +5,57 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/11 10:16:24 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/09 14:01:04 by cwon             ###   ########.fr       */
+/*   Created: 2025/01/18 08:16:36 by cwon              #+#    #+#             */
+/*   Updated: 2025/01/18 09:10:09 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static void	exec_cmd1(t_pipex *param)
+static void	validate_args(int argc)
 {
-	if (access(param->input_file, R_OK) == -1 && errno == EACCES)
-		perror_exit(param, "no read permission on input file", 1);
-	protected_dup2(param, param->input_fd, STDIN_FILENO);
-	protected_dup2(param, param->pipefd[1], STDOUT_FILENO);
-	protected_close(&(param->pipefd[0]));
-	protected_execve(param, param->path1, param->cmd1);
+	if (argc != 5)
+	{
+		ft_putstr_fd("Usage:\t./pipex file1 cmd1 cmd2 file2\n", STDERR_FILENO);
+		exit(EXIT_FAILURE);
+	}
 }
 
-static void	exec_cmd2(t_pipex *param)
+static void	init_pipex(t_pipex *param, int argc, char **argv, char **envp)
 {
-	if (access(param->output_file, W_OK) == -1 && errno == EACCES)
-		perror_exit(param, "no write permission on output file", 1);
-	protected_dup2(param, param->pipefd[0], STDIN_FILENO);
-	protected_dup2(param, param->output_fd, STDOUT_FILENO);
-	protected_close(&(param->pipefd[1]));
-	protected_execve(param, param->path2, param->cmd2);
+	size_t	i;
+
+	validate_args(argc);
+	param->envp = envp;
+	param->file1_fd = open(argv[1], O_RDONLY);
+	param->file2_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	ft_memset(param->pipefd, -1, 2);
+	param->prev_fd = -1;
+	param->deallocate = 0;
+	param->cmd_count = argc - 3;
+	param->commands = (char **)malloc((param->cmd_count + 1) * sizeof(char *));
+	if (!param->commands)
+		perror_exit(param, "malloc", EXIT_FAILURE);
+	i = 0;
+	while (i < param->cmd_count)
+	{
+		param->commands[i] = argv[i + 2];
+		i++;
+	}
+	param->commands[i] = 0;
 }
 
-void	pipex(int argc, char **argv)
+void	pipex(int argc, char **argv, char **envp)
 {
 	t_pipex	param;
 
-	init_pipex(&param, argc, argv);
-	protected_pipe(&param);
-	param.pid1 = protected_fork(&param);
-	if (!param.pid1)
-		exec_cmd1(&param);
-	param.pid2 = protected_fork(&param);
-	if (!param.pid2)
-		exec_cmd2(&param);
+	init_pipex(&param, argc, argv, envp);
+	create_pipeline(&param);
 	flush_pipex(&param);
-	param.pid1 = waitpid(param.pid1, &param.status1, 0);
-	param.pid2 = waitpid(param.pid2, &param.status2, 0);
-	if (WEXITSTATUS(param.status2))
-		exit(WEXITSTATUS(param.status2));
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
-	pipex(argc, argv);
+	pipex(argc, argv, envp);
 	return (0);
 }

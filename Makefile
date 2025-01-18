@@ -6,62 +6,65 @@
 #    By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/05 14:08:28 by cwon              #+#    #+#              #
-#    Updated: 2025/01/13 15:46:39 by cwon             ###   ########.fr        #
+#    Updated: 2025/01/18 09:07:54 by cwon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+NAME = pipex
+MANDATORY_EXEC = pipex_mandatory
+BONUS_EXEC = pipex_bonus
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-tokenizer_src = \
-	tokenizer.c \
+LIBFT = libft/libft.a
+
+TOKENIZER_HEADER = tokenizer.h
+TOKENIZER_SRC = \
+	list_util.c \
 	tokenizer_util.c \
-	list_util.c
-src = \
-	pipex.c \
-	init.c \
-	flush.c \
-	error.c \
-	protect_file.c \
-	protect_process.c \
-	protect_string.c
-obj = $(src:.c=.o) $(tokenizer_src:.c=.o)
-bonus_src = \
-	main_bonus.c \
-	pipex_bonus.c \
-	init_bonus.c
-bonus_obj = $(bonus_src:.c=.o) $(tokenizer_src:.c=.o)
+	tokenizer.c
 
-lib_dir = libft
-lib_name = libft.a
-lib_path = $(lib_dir)/$(lib_name)
+HEADER = pipex.h
+SRC = \
+	flush_pipex.c \
+	path.c \
+	pipex_util.c \
+	pipex.c
+OBJ = $(SRC:.c=.o) $(TOKENIZER_SRC:.c=.o)
 
-NAME = pipex
-header = pipex.h tokenizer.h
-bonus_header = pipex_bonus.h tokenizer.h
+BONUS_SRC = \
+	pipex_bonus.c
+BONUS_OBJ = $(BONUS_SRC:.c=.o) $(TOKENIZER_SRC:.c=.o)
 
-all: $(lib_path) $(NAME)
+all: $(MANDATORY_EXEC)
+	@ln -sf $(MANDATORY_EXEC) $(NAME)
 
-bonus: $(bonus_src) $(bonus_obj) $(bonus_header) $(lib_path)
-	$(CC) $(CFLAGS) $(bonus_obj) -o $(NAME) $(lib_path)
+$(MANDATORY_EXEC): $(OBJ) $(HEADER) $(TOKENIZER_HEADER) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(MANDATORY_EXEC)
 
-$(lib_path):
-	make -C $(lib_dir)
+$(NAME): $(MANDATORY_EXEC)
 
-%.o: %.c $(header) $(bonus_header)
+bonus: $(BONUS_EXEC)
+	@ln -sf $(BONUS_EXEC) $(NAME)
+
+$(BONUS_EXEC): $(BONUS_OBJ) $(HEADER) $(TOKENIZER_HEADER) $(LIBFT)
+	$(CC) $(CFLAGS) $(BONUS_OBJ) $(LIBFT) -o $(BONUS_EXEC)
+
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(src) $(obj) $(header) $(lib_path)
-	$(CC) $(CFLAGS) $(obj) -o $(NAME) $(lib_path)
+$(LIBFT):
+	make -C libft
 
 clean:
-	make clean -C $(lib_dir)
-	rm -f $(obj) $(bonus_obj)
+	make clean -C libft
+	rm -f $(OBJ) $(BONUS_OBJ)
 
 fclean: clean
-	make fclean -C $(lib_dir)
-	rm -f $(NAME)
+	make fclean -C libft
+	rm -f $(MANDATORY_EXEC) $(BONUS_EXEC) $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re libft bonus
+.PHONY: all clean fclean re bonus

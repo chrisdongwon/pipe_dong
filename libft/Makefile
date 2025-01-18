@@ -6,13 +6,18 @@
 #    By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 16:52:39 by cwon              #+#    #+#              #
-#    Updated: 2025/01/14 10:22:57 by cwon             ###   ########.fr        #
+#    Updated: 2025/01/16 11:16:56 by cwon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
+NAME = libft.a
+
+header = \
+	libft.h \
+	ft_printf/ft_printf.h
 src = \
 	ft_abs.c \
 	ft_atof.c \
@@ -20,6 +25,7 @@ src = \
 	ft_bzero.c \
 	ft_calloc.c \
 	ft_greater_than.c \
+	ft_indexof.c \
 	ft_isalnum.c \
 	ft_isalpha.c \
 	ft_isascii.c \
@@ -76,16 +82,13 @@ printf_src = \
 	ft_printf/convert_hex.c \
 	ft_printf/convert_numeric.c \
 	ft_printf/extract.c
-
-obj = $(src:.c=.o) $(printf_src:.c=.o)
-
-NAME = libft.a
-header = libft.h
-
-all: $(NAME)
+gnl_src = get_next_line.c
+obj = $(src:.c=.o) $(printf_src:.c=.o) $(gnl_src:.c=.o)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+all: $(NAME)
 
 $(NAME): $(obj) $(header)
 	ar -rcs $(NAME) $(obj)

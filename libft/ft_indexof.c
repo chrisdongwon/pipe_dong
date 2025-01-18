@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   ft_indexof.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/12 09:07:31 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/08 13:59:27 by cwon             ###   ########.fr       */
+/*   Created: 2025/01/15 15:42:07 by cwon              #+#    #+#             */
+/*   Updated: 2025/01/15 15:42:34 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "libft.h"
 
-void	error_exit(t_pipex *param, char *message, int exit_code)
+ssize_t	ft_indexof(char *s, int c)
 {
-	if (message)
+	ssize_t	i;
+
+	if (!s)
+		return (-1);
+	i = -1;
+	while (s[++i])
 	{
-		ft_putstr_fd(message, 2);
-		ft_putstr_fd("\n", 2);
+		if (s[i] == (c % 128))
+			return (i);
 	}
-	flush_pipex(param);
-	exit(exit_code);
-}
-
-void	perror_exit(t_pipex *param, char *message, int exit_code)
-{
-	perror(message);
-	flush_pipex(param);
-	exit(exit_code);
+	return (-1);
 }

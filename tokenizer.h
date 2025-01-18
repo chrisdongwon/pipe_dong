@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 23:01:01 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/13 10:43:51 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/14 14:02:04 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,6 @@ void	finalize_token(t_tokenizer *data);
 char	**list_to_str_array(t_list *node);
 void	add_to_buffer(t_tokenizer *data, char c);
 void	append_token(t_list **list, char *token);
-void	flush_str_array(char **arr);
+void	flush_str_array(void *ptr);
 
 #endif

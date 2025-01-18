@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/11 10:16:22 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/13 10:20:49 by cwon             ###   ########.fr       */
+/*   Created: 2025/01/16 19:05:42 by cwon              #+#    #+#             */
+/*   Updated: 2025/01/18 09:11:46 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,56 +20,32 @@
 
 # include "tokenizer.h"
 
-extern char	**environ;
-
 typedef struct s_pipex
 {
+	char	**commands;
 	char	**envp;
+	int		file1_fd;
+	int		file2_fd;
 	int		pipefd[2];
-
-	char	*input_file;
-	char	*output_file;
-	int		input_fd;
-	int		output_fd;
-
-	char	**cmd1;
-	char	*path1;
-	pid_t	pid1;
-	int		status1;
-
-	char	**cmd2;
-	char	*path2;
-	pid_t	pid2;
-	int		status2;
+	int		prev_fd;
+	size_t	cmd_count;
+	t_list	*deallocate;
 }	t_pipex;
 
-// pipex.c
-void	pipex(int argc, char **argv);
-
-// init.c
-void	init_pipex(t_pipex *param, int argc, char **argv);
-
-// protect_process.c
-void	protected_pipe(t_pipex *param);
-pid_t	protected_fork(t_pipex *param);
-void	protected_execve(t_pipex *param, char *pathname, char **argv);
-
-// protect_file.c
-int		protected_open(char *pathname, int flags);
-void	protected_close(int *fd);
-void	protected_dup2(t_pipex *param, int oldfd, int newfd);
-
-// protect_string.c
-char	**protected_split(t_pipex *param, char *str, char c);
-char	*protected_strjoin(t_pipex *param, char *s1, char *s2);
-char	*protected_strdup(t_pipex *param, char *str);
-char	*protected_substr(t_pipex *param, char *str, size_t start, size_t len);
-
-// flush.c
+// flush_pipex.c
+void	deallocate_append(t_pipex *param, char **args);
+void	error_exit(t_pipex *param, char *s, int status);
 void	flush_pipex(t_pipex *param);
+void	perror_exit(t_pipex *param, char *s, int status);
+void	safe_close(int *fd);
 
-// error.c
-void	error_exit(t_pipex *param, char *message, int exit_code);
-void	perror_exit(t_pipex *param, char *message, int exit_code);
+// path.c
+char	*find_command_path(char *cmd, char **envp);
+
+// pipex.c
+void	pipex(int argc, char **argv, char **envp);
+
+// pipex_util.c
+void	create_pipeline(t_pipex *param);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 09:15:09 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/13 10:39:17 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/14 14:01:49 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,14 @@ void	append_token(t_list **list, char *token)
 	ft_lstadd_back(list, node);
 }
 
-void	flush_str_array(char **arr)
+void	flush_str_array(void *ptr)
 {
+	char	**arr;
 	size_t	i;
 
-	if (!arr)
+	if (!ptr)
 		return ;
+	arr = (char **)ptr;
 	i = 0;
 	while (arr[i])
 		free(arr[i++]);
