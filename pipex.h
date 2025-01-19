@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 19:05:42 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/18 13:05:13 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 12:56:51 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_pipex
 	char	*file2;
 	int		file1_fd;
 	int		file2_fd;
+	pid_t	*pid_array;
 	size_t	cmd_count;
 	t_list	*deallocate;
 }	t_pipex;

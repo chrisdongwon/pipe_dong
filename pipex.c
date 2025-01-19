@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 10:57:37 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/18 13:11:25 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 12:58:57 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ static void	init_pipex(t_pipex *param, int argc, char **argv, char **envp)
 	param->file2 = argv[argc - 1];
 	param->file2_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	param->cmd_count = argc - 3;
-	param->commands = (char **)malloc((param->cmd_count + 1) * sizeof(char *));
-	if (!param->commands)
+	param->commands = (char **)malloc(param->cmd_count * sizeof(char *));
+	param->pid_array = (pid_t *)malloc(param->cmd_count * sizeof(pid_t));
+	if (!param->commands | !param->pid_array)
 		perror_exit(param, "malloc", EXIT_FAILURE);
 	i = 0;
 	while (i < param->cmd_count)
@@ -44,6 +45,30 @@ static void	init_pipex(t_pipex *param, int argc, char **argv, char **envp)
 	param->commands[i] = 0;
 }
 
+static void	wait_for_children(t_pipex *param)
+{
+	int		status;
+	int		exit_status;
+	size_t	i;
+	pid_t	pid;
+
+	ft_printf("child pids:\n");
+	for (size_t i = 0; i < param->cmd_count; i++)
+		ft_printf("child %ld: %d\n", i, param->pid_array[i]);
+
+	exit_status = 0;
+	i = 0;
+	while (i < param->cmd_count)
+	{
+		pid = wait(&status);
+		if (status && !exit_status)
+			exit_status = status;
+		ft_printf("exit status of process %ld of pid %d: %d\n", i, pid, WEXITSTATUS(status));
+		i++;
+	}
+	exit(WEXITSTATUS(exit_status));
+}
+
 void	pipex(int argc, char **argv, char **envp)
 {
 	t_pipex	param;
@@ -51,9 +76,8 @@ void	pipex(int argc, char **argv, char **envp)
 	validate_args(argc);
 	init_pipex(&param, argc, argv, envp);
 	create_pipeline(&param);
-	while (wait(0) > 0)
-		continue ;
 	flush_pipex(&param);
+	wait_for_children(&param);
 }
 
 int	main(int argc, char **argv, char **envp)

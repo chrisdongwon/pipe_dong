@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 11:36:49 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/18 13:18:52 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 13:04:34 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	safe_execve(t_pipex *param, char *cmd_path, char **args)
 	if (execve(cmd_path, args, envp) == -1)
 	{
 		if (errno == EACCES)
-			perror_exit(param, "Permission denied", 126);
+			perror_exit(param, "permission denied", 126);
 		if (errno == ENOENT)
 			perror_exit(param, "command not found", 127);
 		perror_exit(param, "execve", EXIT_FAILURE);
@@ -32,9 +32,9 @@ static void	safe_execve(t_pipex *param, char *cmd_path, char **args)
 static void	check_file_permission(t_pipex *param, size_t i)
 {
 	if (i == 0 && access(param->file1, R_OK) == -1)
-		perror_exit(param, "no read permission on input file", 1);
-	else if (i == param->cmd_count - 1 && access(param->file2, W_OK) == -1)
-		perror_exit(param, "no write permission on output file", 1);
+		perror_exit(param, param->file1, 1);
+	if (i == param->cmd_count - 1 && access(param->file2, W_OK) == -1)
+		perror_exit(param, param->file2, 1);
 }
 
 static void	exec_command(t_pipex *param, size_t i, int input_fd, int output_fd)
@@ -50,7 +50,7 @@ static void	exec_command(t_pipex *param, size_t i, int input_fd, int output_fd)
 	deallocate_append_str_array(param, args);
 	cmd_path = find_command_path(param, args[0]);
 	if (!cmd_path)
-		flush_exit(param, "Command not found", 127);
+		flush_exit(param, "command not found", 127);
 	check_file_permission(param, i);
 	if (input_fd != STDIN_FILENO)
 	{
@@ -88,6 +88,8 @@ static void	child_process(t_pipex *param, size_t i, int pipefd[2], int prev_fd)
 	}
 	else if (pid == -1)
 		perror_exit(param, "fork", EXIT_FAILURE);
+	else
+		param->pid_array[i] = pid;
 }
 
 void	create_pipeline(t_pipex *param)
