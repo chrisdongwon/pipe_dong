@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 19:05:42 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/19 14:18:32 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 16:43:40 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_pipex
 {
 	char	**commands;
 	char	**environ;
+	char	**env_path;
 	char	*file1;
 	char	*file2;
 	int		file1_fd;
@@ -37,6 +38,7 @@ typedef struct s_pipex
 void	pipex(int argc, char **argv, char **envp);
 
 // pipex_path.c
+char	**init_env_path(t_pipex *param);
 char	*find_command_path(t_pipex *param, char *cmd);
 
 // pipex_util.c

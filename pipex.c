@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 10:57:37 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/19 14:31:21 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 16:42:48 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static void	init_pipex(t_pipex *param, int argc, char **argv, char **envp)
 	param->file2 = argv[argc - 1];
 	param->file2_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	param->cmd_count = argc - 3;
+	param->env_path = init_env_path(param);
 	param->commands = (char **)malloc(param->cmd_count * sizeof(char *));
 	if (!param->commands)
 		perror_exit(param, "malloc", EXIT_FAILURE);
@@ -62,19 +63,6 @@ static void	wait_for_children(t_pipex *param)
 	}
 	exit(WEXITSTATUS(exit_status));
 }
-
-// static void	wait_for_children(t_pipex *param)
-// {
-// 	int		status;
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (i < param->cmd_count)
-// 	{
-// 		wait(&status);
-// 		i++;
-// 	}
-// }
 
 void	pipex(int argc, char **argv, char **envp)
 {

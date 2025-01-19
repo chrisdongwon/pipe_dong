@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 12:48:13 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/18 13:02:45 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 16:43:48 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static char	*get_path(t_pipex *param, char *cmd, char **envp)
 	return (ft_strdup(cmd));
 }
 
-char	**init_envp(t_pipex *param)
+char	**init_env_path(t_pipex *param)
 {
 	char	**envp;
 	size_t	i;
@@ -78,10 +78,8 @@ char	**init_envp(t_pipex *param)
 char	*find_command_path(t_pipex *param, char *cmd)
 {
 	char	*result;
-	char	**envp;
 
-	envp = init_envp(param);
-	result = get_path(param, cmd, envp);
+	result = get_path(param, cmd, param->env_path);
 	if (!result)
 		flush_exit(param, "get_path", EXIT_FAILURE);
 	deallocate_append(param, result);
