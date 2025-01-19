@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 10:57:37 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/19 16:42:48 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 17:36:27 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ static void	init_pipex(t_pipex *param, int argc, char **argv, char **envp)
 		param->commands[i] = argv[i + 2];
 		i++;
 	}
-	param->commands[i] = 0;
 }
 
 static void	wait_for_children(t_pipex *param)

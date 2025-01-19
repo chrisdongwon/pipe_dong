@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 12:48:13 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/19 16:43:48 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 17:29:40 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,7 @@ static char	*get_path(t_pipex *param, char *cmd, char **envp)
 	size_t	i;
 
 	if (!envp || (ft_strlen(cmd) > 1 && !ft_strncmp(cmd, "./", 2)))
-	{
 		return (ft_strdup(cmd));
-	}
 	i = 0;
 	while (envp[i])
 	{

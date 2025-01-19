@@ -6,26 +6,21 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 11:36:49 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/19 14:28:10 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 17:28:26 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static void	safe_execve(t_pipex *param, char *cmd_path, char **args)
+static void	safe_execve(t_pipex *param, char *pathname, char **argv)
 {
-	char	**envp;
-
-	envp = param->environ;
-	if (!cmd_path)
-		envp = 0;
-	if (execve(cmd_path, args, envp) == -1)
+	if (execve(pathname, argv, param->environ) == -1)
 	{
 		if (errno == EACCES)
 			perror_exit(param, "permission denied", 126);
 		if (errno == ENOENT)
 			perror_exit(param, "command not found", 127);
-		perror_exit(param, "execve", EXIT_FAILURE);
+		flush_exit(param, "execve", EXIT_FAILURE);
 	}
 }
 
@@ -39,17 +34,17 @@ static void	check_file_permission(t_pipex *param, size_t i)
 
 static void	exec_command(t_pipex *param, size_t i, int input_fd, int output_fd)
 {
-	char	**args;
-	char	*cmd_path;
+	char	**argv;
+	char	*pathname;
 	char	*cmd;
 
 	cmd = param->commands[i];
-	args = tokenize(cmd);
-	if (!args)
+	argv = tokenize(cmd);
+	if (!argv)
 		flush_exit(param, "tokenize", EXIT_FAILURE);
-	deallocate_append_str_array(param, args);
-	cmd_path = find_command_path(param, args[0]);
-	if (!cmd_path)
+	deallocate_append_str_array(param, argv);
+	pathname = find_command_path(param, argv[0]);
+	if (!pathname)
 		flush_exit(param, "command not found", 127);
 	check_file_permission(param, i);
 	if (input_fd != STDIN_FILENO)
@@ -62,7 +57,7 @@ static void	exec_command(t_pipex *param, size_t i, int input_fd, int output_fd)
 		dup2(output_fd, STDOUT_FILENO);
 		close(output_fd);
 	}
-	safe_execve(param, cmd_path, args);
+	safe_execve(param, pathname, argv);
 }
 
 static pid_t	child_process(t_pipex *param, size_t i, int *pipefd, int prev)

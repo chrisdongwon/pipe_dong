@@ -6,7 +6,7 @@
 #    By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/05 14:08:28 by cwon              #+#    #+#              #
-#    Updated: 2025/01/18 12:49:15 by cwon             ###   ########.fr        #
+#    Updated: 2025/01/19 17:32:59 by cwon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,8 +45,8 @@ $(MANDATORY_EXEC): $(LIBFT) $(OBJ) $(HEADER) $(TOKENIZER_HEADER)
 
 $(NAME): $(MANDATORY_EXEC)
 
-bonus: $(BONUS_EXEC)
-	@ln -sf $(BONUS_EXEC) $(NAME)
+# bonus: $(BONUS_EXEC)
+# 	@ln -sf $(BONUS_EXEC) $(NAME)
 
 $(BONUS_EXEC): $(LIBFT) $(BONUS_OBJ) $(HEADER) $(TOKENIZER_HEADER)
 	$(CC) $(CFLAGS) $(BONUS_OBJ) $(LIBFT) -o $(BONUS_EXEC)
