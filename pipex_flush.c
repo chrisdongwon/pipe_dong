@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 11:18:58 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/19 13:00:14 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 14:15:31 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	flush_pipex(t_pipex *param)
 	close(param->file1_fd);
 	close(param->file2_fd);
 	free(param->commands);
-	free(param->pid_array);
 	ft_lstclear(&(param->deallocate), free);
 }
 

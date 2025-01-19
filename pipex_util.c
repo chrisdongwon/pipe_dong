@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 11:36:49 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/19 13:04:34 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 14:28:10 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,17 +65,19 @@ static void	exec_command(t_pipex *param, size_t i, int input_fd, int output_fd)
 	safe_execve(param, cmd_path, args);
 }
 
-static void	child_process(t_pipex *param, size_t i, int pipefd[2], int prev_fd)
+static pid_t	child_process(t_pipex *param, size_t i, int *pipefd, int prev)
 {
 	pid_t	pid;
 
 	pid = fork();
+	if (pid > 0)
+		return (pid);
 	if (!pid)
 	{
-		if (prev_fd != STDIN_FILENO)
+		if (prev != STDIN_FILENO)
 		{
-			dup2(prev_fd, STDIN_FILENO);
-			close(prev_fd);
+			dup2(prev, STDIN_FILENO);
+			close(prev);
 		}
 		if (pipefd[1] != STDOUT_FILENO)
 		{
@@ -84,12 +86,11 @@ static void	child_process(t_pipex *param, size_t i, int pipefd[2], int prev_fd)
 		}
 		if (pipefd[0] != STDIN_FILENO)
 			close(pipefd[0]);
-		exec_command(param, i, prev_fd, pipefd[1]);
+		exec_command(param, i, prev, pipefd[1]);
 	}
-	else if (pid == -1)
-		perror_exit(param, "fork", EXIT_FAILURE);
 	else
-		param->pid_array[i] = pid;
+		perror_exit(param, "fork", EXIT_FAILURE);
+	return (pid);
 }
 
 void	create_pipeline(t_pipex *param)
@@ -109,7 +110,7 @@ void	create_pipeline(t_pipex *param)
 		}
 		else
 			pipefd[1] = param->file2_fd;
-		child_process(param, i, pipefd, prev_fd);
+		param->last_pid = child_process(param, i, pipefd, prev_fd);
 		if (prev_fd != param->file1_fd)
 			close(prev_fd);
 		close(pipefd[1]);
