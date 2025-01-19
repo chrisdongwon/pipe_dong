@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 12:48:13 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/19 17:29:40 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/19 20:56:40 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,19 @@ static char	*get_path(t_pipex *param, char *cmd, char **envp)
 
 char	**init_env_path(t_pipex *param)
 {
-	char	**envp;
+	char	*path;
 	size_t	i;
 
-	envp = 0;
+	if (!param->environ || !param->environ[0])
+		return (0);
 	i = 0;
+	while (param->environ[i] && ft_strncmp(param->environ[i], "PATH=", 5))
+		i++;
 	if (!param->environ[i])
-		envp = safe_split(param, "/bin:/sbin:/usr/bin:/usr/sbin", ':');
+		path = 0;
 	else
-	{
-		while (param->environ[i] && ft_strncmp(param->environ[i], "PATH=", 5))
-			i++;
-		if (param->environ[i])
-			envp = safe_split(param, param->environ[i], ':');
-	}
-	return (envp);
+		path = param->environ[i] + 5;
+	return (safe_split(param, path, ':'));
 }
 
 char	*find_command_path(t_pipex *param, char *cmd)
