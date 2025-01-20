@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 11:36:49 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/19 17:28:26 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/20 15:20:38 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ static void	safe_execve(t_pipex *param, char *pathname, char **argv)
 
 static void	check_file_permission(t_pipex *param, size_t i)
 {
-	if (i == 0 && access(param->file1, R_OK) == -1)
-		perror_exit(param, param->file1, 1);
+	if (!i && access(param->file1, R_OK) == -1)
+		perror_exit(param, param->file1, EXIT_FAILURE);
 	if (i == param->cmd_count - 1 && access(param->file2, W_OK) == -1)
-		perror_exit(param, param->file2, 1);
+		perror_exit(param, param->file2, EXIT_FAILURE);
 }
 
 static void	exec_command(t_pipex *param, size_t i, int input_fd, int output_fd)

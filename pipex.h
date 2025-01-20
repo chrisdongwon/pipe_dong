@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 19:05:42 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/19 20:49:58 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/20 15:07:01 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,20 @@
 typedef struct s_pipex
 {
 	char	**commands;
-	char	**environ;
 	char	**env_path;
+	char	**environ;
 	char	*file1;
 	char	*file2;
 	int		file1_fd;
 	int		file2_fd;
+	int		heredoc;
 	pid_t	last_pid;
 	size_t	cmd_count;
 	t_list	*deallocate;
 }	t_pipex;
+
+// heredoc_bonus.c
+void	init_heredoc(t_pipex *param, int argc, char **argv);
 
 // pipex.c
 void	pipex(int argc, char **argv, char **envp);

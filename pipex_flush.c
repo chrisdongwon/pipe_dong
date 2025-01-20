@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 11:18:58 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/19 14:15:31 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/20 12:57:08 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,10 @@ void	flush_pipex(t_pipex *param)
 {
 	close(param->file1_fd);
 	close(param->file2_fd);
-	free(param->commands);
-	ft_lstclear(&(param->deallocate), free);
+	if (param->commands)
+		free(param->commands);
+	if (param->deallocate)
+		ft_lstclear(&(param->deallocate), free);
 }
 
 void	perror_exit(t_pipex *param, char *s, int status)

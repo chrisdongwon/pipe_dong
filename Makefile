@@ -6,7 +6,7 @@
 #    By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/05 14:08:28 by cwon              #+#    #+#              #
-#    Updated: 2025/01/19 17:32:59 by cwon             ###   ########.fr        #
+#    Updated: 2025/01/20 22:20:02 by cwon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,19 +34,28 @@ SRC = \
 OBJ = $(SRC:.c=.o) $(TOKENIZER_SRC:.c=.o)
 
 BONUS_SRC = \
-	pipex_bonus.c
+	heredoc_bonus.c \
+	pipex_bonus.c \
+	pipex_flush.c \
+	pipex_path.c \
+	pipex_util.c
 BONUS_OBJ = $(BONUS_SRC:.c=.o) $(TOKENIZER_SRC:.c=.o)
 
 all: $(MANDATORY_EXEC)
 	@ln -sf $(MANDATORY_EXEC) $(NAME)
 
+# all: $(BONUS_EXEC)
+# 	@ln -sf $(BONUS_EXEC) $(NAME)
+
 $(MANDATORY_EXEC): $(LIBFT) $(OBJ) $(HEADER) $(TOKENIZER_HEADER) 
 	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(MANDATORY_EXEC)
 
-$(NAME): $(MANDATORY_EXEC)
+# $(NAME): $(MANDATORY_EXEC)
+$(NAME): $(BONUS_EXEC)
+	@ln -sf $(BONUS_EXEC) $(NAME)
 
-# bonus: $(BONUS_EXEC)
-# 	@ln -sf $(BONUS_EXEC) $(NAME)
+bonus: $(BONUS_EXEC)
+	@ln -sf $(BONUS_EXEC) $(NAME)
 
 $(BONUS_EXEC): $(LIBFT) $(BONUS_OBJ) $(HEADER) $(TOKENIZER_HEADER)
 	$(CC) $(CFLAGS) $(BONUS_OBJ) $(LIBFT) -o $(BONUS_EXEC)
