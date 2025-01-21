@@ -6,7 +6,7 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 22:14:14 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/20 22:21:23 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/21 09:33:05 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,11 @@ void	init_heredoc(t_pipex *param, int argc, char **argv)
 			break ;
 		write(pipefd[1], line, ft_strlen(line));
 		free(line);
-		line = 0;
 	}
-	if (line)
-		free(line);
+	free(line);
 	close(pipefd[1]);
 	param->file1_fd = pipefd[0];
 	param->file2_fd = \
 	open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	param->file1 = 0;
 }
