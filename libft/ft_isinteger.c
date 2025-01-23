@@ -6,77 +6,68 @@
 /*   By: cwon <cwon@student.42bangkok.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 14:17:48 by cwon              #+#    #+#             */
-/*   Updated: 2025/01/14 09:49:40 by cwon             ###   ########.fr       */
+/*   Updated: 2025/01/23 13:48:28 by cwon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	is_overflow(const char *nptr, size_t length)
+static void	extract_sign(const char **str, int *is_negative)
 {
-	char	*int_max;
-	size_t	i;
-
-	i = 0;
-	if (nptr[i] == '-')
-		return (0);
-	if (nptr[i] == '+')
-		i++;
-	if (length - i == 10)
+	while (ft_isspace((unsigned char)**str))
+		(*str)++;
+	*is_negative = 0;
+	if (**str == '-')
 	{
-		int_max = "2147483647";
+		*is_negative = 1;
+		(*str)++;
+	}
+	else if (**str == '+')
+		(*str)++;
+}
+
+static int	check_digits(const char *str, int is_negative)
+{
+	const char	*compare_str;
+	size_t		i;
+	size_t		length;
+
+	length = ft_strlen(str);
+	if (length > 10)
+		return (0);
+	if (length == 10)
+	{
+		compare_str = "2147483647";
+		if (is_negative)
+			compare_str = "2147483648";
+		i = 0;
 		while (i < length)
 		{
-			if (nptr[i] > int_max[i])
-				return (1);
+			if (str[i] > compare_str[i])
+				return (0);
+			else if (str[i] < compare_str[i])
+				break ;
 			i++;
 		}
 	}
-	return (0);
+	return (1);
 }
 
-static int	is_underflow(const char *nptr, size_t length)
+int	ft_isinteger(const char *str)
 {
-	char	*int_min;
-	size_t	i;
+	int			is_negative;
+	const char	*ptr;
 
-	i = 0;
-	if (nptr[i] != '-')
+	if (str == 0 || !(*str))
 		return (0);
-	if (length - i == 11)
+	extract_sign(&str, &is_negative);
+	if (!(*str))
+		return (0);
+	ptr = str;
+	while (*ptr)
 	{
-		int_min = "-2147483648";
-		while (i < length)
-		{
-			if (nptr[i] > int_min[i])
-				return (1);
-			i++;
-		}
-	}
-	return (0);
-}
-
-int	ft_isinteger(const char *nptr)
-{
-	size_t	i;
-	size_t	length;
-
-	length = ft_strlen(nptr);
-	if (!length || ((length == 1) && !ft_isdigit(nptr[0])))
-		return (0);
-	i = 0;
-	if (nptr[i] == '-' || nptr[i] == '+')
-		i++;
-	if (length - i > 10)
-		return (0);
-	while (i < length)
-	{
-		if (!ft_isdigit(nptr[i++]))
+		if (!ft_isdigit((unsigned char)*(ptr++)))
 			return (0);
 	}
-	if (nptr[0] == '-' && is_underflow(nptr, length))
-		return (0);
-	if (is_overflow(nptr, length))
-		return (0);
-	return (1);
+	return (check_digits(str, is_negative));
 }
